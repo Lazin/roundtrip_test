@@ -23,8 +23,6 @@ cat 1day_5787rows_5sec_step_2.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
 cat 1day_5787rows_5sec_step_3.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
 cat 1day_5787rows_5sec_step_4.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
 cat 1day_5787rows_5sec_step_5.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
-cat 1day_5787rows_5sec_step_6.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
-cat 1day_5787rows_5sec_step_7.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
 
 wait
 
@@ -37,8 +35,6 @@ wait_for_completion "host_17360"
 wait_for_completion "host_23147"
 wait_for_completion "host_28934"
 wait_for_completion "host_34721"
-wait_for_completion "host_40490"
-wait_for_completion "host_46295"
 
 timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Completed @ $timestamp"
