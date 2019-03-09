@@ -1,4 +1,4 @@
-AKUMULI_ENDPOINT="127.0.0.1"
+AKUMULI_ENDPOINT="167.99.144.58"
 
 function wait_for_completion() {
     response=
@@ -10,7 +10,7 @@ function wait_for_completion() {
         sleep 1
         ((c++)) && ((c==20)) && break
     done
-    printf "$response\n"
+    printf "\n$response"
 }
 
 # Insert downloaded data
@@ -32,6 +32,13 @@ timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Wait for completion @ $timestamp"
 
 wait_for_completion "host_5786"
+wait_for_completion "host_11573"
+wait_for_completion "host_17360"
+wait_for_completion "host_23147"
+wait_for_completion "host_28934"
+wait_for_completion "host_34721"
+wait_for_completion "host_40490"
+wait_for_completion "host_46295"
 
 timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Completed @ $timestamp"
