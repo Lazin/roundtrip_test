@@ -1,7 +1,7 @@
 # Generate 6 files
 # Every file has cardinality of 57870 which will give us total cardinality of 347220.
 # The time range is 10-day with 5-second step. This gives us 17280 datapoints per series per day and
-# 59999616000 datapoints total which is close to 60-billion datapoints per file.
+# 59999616000 datapoints total which is close to 60-billion datapoints total.
 # The required storage is approximately 223GB.
 
 
