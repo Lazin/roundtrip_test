@@ -59,6 +59,18 @@ def open_tsdb_msg(ts, measurements, types, values, *tags):
         lines.append(line)
     return '\n'.join(lines) + '\n'
 
+def graphite_msg(ts, measurements, types, values, *tags):
+    tags_suffix = ';'.join('{0}={1}'.format(key, val) for key, val in tags)
+    if tags_suffix:
+        tags_suffix = ';' + tags_suffix
+    lines = []
+    unix_epoch_start = datetime.datetime(1970, 1, 1)
+    for i, metric in enumerate(measurements):
+        timestamp = int((ts - unix_epoch_start).total_seconds())
+        line = '{0}{1} {2:.6} {3}\n'.format(metric, tags_suffix, values[i], timestamp)
+        lines.append(line)
+    return ''.join(lines)
+
 def generate_rows(ts, delta, measurements, types, msg_fn, *tags):
     row = [10.0] * len(measurements)
     out = list(row)
@@ -144,7 +156,7 @@ def main(idrange, timerange, out_format, seed):
                 break
             sys.stdout.write(msg)
     else:
-        fn = bulk_msg if out_format == 'RESP' else open_tsdb_msg
+        fn = bulk_msg if out_format == 'RESP' else graphite_msg if out_format == 'Graphite' else open_tsdb_msg
         lambdas = [generate_rows(begin, delta, measurements, types, fn, *t) for t in tags]
 
         for ts, msg in generate_rr(lambdas):
@@ -160,7 +172,7 @@ if __name__ == '__main__':
     parser.add_argument('--tbegin', required=True, help='begining of the time range')
     parser.add_argument('--tend',   required=True, help='end of the time range')
     parser.add_argument('--tdelta', required=True, help='time step')
-    parser.add_argument('--format', required=True, help='format - RESP, RESP2 or OpenTSDB')
+    parser.add_argument('--format', required=True, help='format - RESP, RESP2, OpenTSDB or Graphite')
     parser.add_argument('--seed',   required=False, help='custom seed', default=None)
 
     args = parser.parse_args()
