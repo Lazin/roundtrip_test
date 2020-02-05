@@ -38,7 +38,7 @@ def bulk_msg_with_dict(ts, id, types, values):
     lines = [sname, timestr, header]
     for i, val in enumerate(values):
         if types[i] == 0:
-            lines.append("+{:.6}".format(val))
+            lines.append("+{:.6}".format(int(val)))
         else:
             lines.append("+{0}".format(val))
     return '\r\n'.join(lines) + '\r\n'
@@ -118,7 +118,7 @@ def main(idrange, timerange, out_format, seed):
 
     # measurement types, 0 - float, 1 - int
     types = [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1
     ]
 
     tag_combinations = {
@@ -150,11 +150,12 @@ def main(idrange, timerange, out_format, seed):
             msg = "*2\r\n+{0}\r\n:{1}\r\n".format(sname, ix)
             ids.append(ix)
             sys.stdout.write(msg)
-        lambdas = [generate_rows_dict(begin, delta, id_, types) for id_ in ids]
-        for ts, msg in generate_rr(lambdas):
-            if ts > end:
-                break
-            sys.stdout.write(msg)
+        lambdas = [[generate_rows_dict(begin, delta, id_, types)] for id_ in ids]
+        for lmd in lambdas:
+            for ts, msg in generate_rr(lmd):
+                if ts > end:
+                    break
+                sys.stdout.write(msg)
     else:
         fn = bulk_msg if out_format == 'RESP' else graphite_msg if out_format == 'Graphite' else open_tsdb_msg
         lambdas = [generate_rows(begin, delta, measurements, types, fn, *t) for t in tags]
