@@ -22,12 +22,13 @@ def bulk_msg_with_dict(ts, id, types, values):
     header = "*{0}".format(ncol)
     lines = [sname, timestr, header]
     for i, val in enumerate(values):
+        # add anomaly
+        ra = random.randint(0, 10000)
+        if ra >= 9997:
+            val += 10000
         if types[i] == 0:
             lines.append("+{:.6}".format(val))
         else:
-            # add anomaly
-            if val % 6007 == 0:
-                val += 10000
             lines.append("+{0}".format(val))
     return '\r\n'.join(lines) + '\r\n'
 
