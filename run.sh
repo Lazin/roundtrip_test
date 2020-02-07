@@ -8,9 +8,8 @@ function wait_for_completion() {
     c=0
     printf "Waiting until write will be completed "
     until [ -n "$response" ]; do
-        response=$(curl -s --url $AKUMULI_ENDPOINT:8181/api/query -d "{ \"select\": \"cpu.user\", \"where\" : { \"host\": \"$1\" }, \"range\": { \"from\": \"20200115T111420.000000\", \"to\": \"20200115T111520.000000\" }}")
-        #printf '.'
-        echo $response
+        response=$(curl -s --url $AKUMULI_ENDPOINT:8181/api/query -d "{ \"select\": \"cpu.user\", \"where\" : { \"host\": \"$1\" }, \"range\": { \"from\": \"20200108T053540.000000\", \"to\": \"20200108T053640.000000\" }}")
+        printf '.'
         sleep 1
         ((c++)) && ((c==20)) && break
     done
@@ -21,14 +20,14 @@ function wait_for_completion() {
 timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Sending data in RESP format to $AKUMULI_ENDPOINT @ $timestamp"
 
-cat 500K_series_125000_rows_10sec_step_0.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
-cat 500K_series_125000_rows_10sec_step_1.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
-cat 500K_series_125000_rows_10sec_step_2.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
-cat 500K_series_125000_rows_10sec_step_3.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
-cat 500K_series_125000_rows_10sec_step_4.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
-cat 500K_series_125000_rows_10sec_step_5.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
-cat 500K_series_125000_rows_10sec_step_6.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
-cat 500K_series_125000_rows_10sec_step_7.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
+cat 500K_series_62500_rows_10sec_step_0.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
+cat 500K_series_62500_rows_10sec_step_1.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
+cat 500K_series_62500_rows_10sec_step_2.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
+cat 500K_series_62500_rows_10sec_step_3.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
+cat 500K_series_62500_rows_10sec_step_4.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
+cat 500K_series_62500_rows_10sec_step_5.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
+cat 500K_series_62500_rows_10sec_step_6.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
+cat 500K_series_62500_rows_10sec_step_7.gz | gunzip > /dev/tcp/$AKUMULI_ENDPOINT/8282 &
 
 wait
 
@@ -56,6 +55,6 @@ echo "Completed @ $timestamp"
 
 timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Run aggregate query @ $timestamp"
-time curl -XPOST "http://$AKUMULI_ENDPOINT:8181/api/query" -d '{ "select": "cpu.user", "range": {"from": "20010101T000000", "to": "20200101T000000"}, "filter": { "gt": 13 } }' | wc -l
+time curl -XPOST "http://$AKUMULI_ENDPOINT:8181/api/query" -d '{ "select": "cpu.user", "range": {"from": "20010101T000000", "to": "20300101T000000"}, "filter": { "gt": 10000 } }' | wc -l
 timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Completed @ $timestamp"
