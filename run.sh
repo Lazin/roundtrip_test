@@ -47,14 +47,16 @@ timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Completed @ $timestamp"
 
 # Query everything!
+sleep 600
 timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Run aggregate query @ $timestamp"
-time curl -XPOST "http://$AKUMULI_ENDPOINT:8181/api/query" -d '{ "aggregate": { "cpu.user": "max" } }' | wc -l
+time curl -s -XPOST "http://$AKUMULI_ENDPOINT:8181/api/query" -d '{ "aggregate": { "cpu.user": "max" } }' | wc -c
 timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Completed @ $timestamp"
 
+sleep 600
 timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Run aggregate query @ $timestamp"
-time curl -XPOST "http://$AKUMULI_ENDPOINT:8181/api/query" -d '{ "select": "cpu.user", "range": {"from": "20010101T000000", "to": "20300101T000000"}, "filter": { "gt": 10000 } }' | wc -l
+time curl -s -XPOST "http://$AKUMULI_ENDPOINT:8181/api/query" -d '{ "select": "cpu.user", "range": {"from": "20010101T000000", "to": "20300101T000000"}, "order-by": "series", "filter": { "gt": 10000 } }' | wc -c
 timestamp=$(date +%Y%m%dT%H%M%S)
 echo "Completed @ $timestamp"
